@@ -1,171 +1,111 @@
 import React, { useContext, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { FaBarsStaggered, FaMoon } from "react-icons/fa6";
+import { FaMoon } from "react-icons/fa6";
 import { CiLight } from "react-icons/ci";
-import { IoIosNotifications } from "react-icons/io";
+import { IoIosNotificationsOutline } from "react-icons/io";
+import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { ModeContext } from "../Contexts/ThemeContext";
 import profileImage from "../../assets/profile.jpg";
 
 export default function Navbar() {
   const { mode, changeMode } = useContext(ModeContext);
-  const [toggleBars, setToggleBars] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  const navBg =
+  const navStyle =
     mode === "light"
-      ? "bg-white text-slate-900"
-      : "bg-slate-800 text-slate-100";
+      ? "bg-white/80 text-slate-800 border-slate-200"
+      : "bg-slate-900/80 text-slate-100 border-slate-700";
 
-  const activeLink = "text-[#0084D1] font-semibold";
-  const normalLink =
-    "hover:text-[#0084D1] transition-colors duration-300";
+  const active =
+    "text-[#0084D1] border-b-2 border-[#0084D1] pb-1";
+  const normal =
+    "hover:text-[#0084D1] transition-all";
+
+  const closeMenu = () => setOpen(false);
 
   return (
-    <nav className={`shadow-lg py-3 ${navBg} fixed inset-x-0 top-0`}>
-      <div className="container mx-auto px-4">
-
-        {/* ===== Top Navbar ===== */}
-        <div className="flex justify-between items-center">
+    <>
+      <header
+        className={`fixed top-0 inset-x-0 z-50 backdrop-blur-xl border-b ${navStyle}`}
+      >
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
 
           {/* Logo */}
-          <div className="flex items-center space-x-2 text-[#004AAD] dark:text-white">
-            <svg className="w-9 h-9" fill="currentColor" viewBox="0 0 24 20">
-              <path d="M12 2C8.14 2 5 5.14 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm3 8h-2v2h-2v-2H9V8h2V6h2v2h2v2z" />
-            </svg>
-            <Link to="/pharmacy" className="text-xl font-bold">
-              MedLink
-            </Link>
-          </div>
+          <Link to="/pharmacy" className="flex items-center gap-2 font-bold text-lg">
+            <span className="w-9 h-9 rounded-lg bg-[#0084D1] text-white flex items-center justify-center">
+              +
+            </span>
+            MedLink
+          </Link>
 
           {/* Desktop Links */}
-          <ul className="hidden lg:flex space-x-8 text-lg">
-            <li>
-              <NavLink
-                to="/pharmacy"
-                end
-                className={({ isActive }) =>
-                  isActive ? activeLink : normalLink
-                }
-              >
-                Home
-              </NavLink>
-            </li>
+          <nav className="hidden lg:flex gap-8 text-sm font-medium">
+            <NavLink to="/pharmacy" end className={({ isActive }) => isActive ? active : normal}>
+              Home
+            </NavLink>
+            <NavLink to="/pharmacy/inventory-management" className={({ isActive }) => isActive ? active : normal}>
+              Inventory
+            </NavLink>
+            <NavLink to="/pharmacy/orders" className={({ isActive }) => isActive ? active : normal}>
+              Orders
+            </NavLink>
+            <NavLink to="/pharmacy/contact-us" className={({ isActive }) => isActive ? active : normal}>
+              Contact
+            </NavLink>
+          </nav>
 
-            <li>
-              <NavLink
-                to="/pharmacy/inventory management"
-                className={({ isActive }) =>
-                  isActive ? activeLink : normalLink
-                }
-              >
-                Inventory Management
-              </NavLink>
-            </li>
+          {/* Right Section */}
+          <div className="flex items-center gap-3 sm:gap-4">
 
-            <li>
-              <NavLink
-                to="/pharmacy/orders"
-                className={({ isActive }) =>
-                  isActive ? activeLink : normalLink
-                }
-              >
-                Orders
-              </NavLink>
-            </li>
-
-            <li>
-              <NavLink
-                to="/pharmacy/contact-us"
-                className={({ isActive }) =>
-                  isActive ? activeLink : normalLink
-                }
-              >
-                Contact Us
-              </NavLink>
-            </li>
-          </ul>
-
-          {/* Right Icons */}
-          <div className="flex items-center space-x-3">
+            {/* Theme */}
             {mode === "light" ? (
               <FaMoon
                 onClick={changeMode}
-                className="text-2xl cursor-pointer hover:scale-110 transition"
+                className="cursor-pointer text-xl hover:scale-110 transition"
               />
             ) : (
               <CiLight
                 onClick={changeMode}
-                className="text-3xl text-yellow-400 cursor-pointer hover:rotate-180 transition"
+                className="cursor-pointer text-2xl text-yellow-400 hover:rotate-180 transition"
               />
             )}
 
-            <IoIosNotifications className="text-3xl cursor-pointer" />
+            {/* Notifications */}
+            <IoIosNotificationsOutline className="text-2xl cursor-pointer hover:text-[#0084D1]" />
 
+            {/* Profile */}
             <Link to="/pharmacy/profile">
               <img
                 src={profileImage}
-                className="w-9 h-9 rounded-full border-2 border-blue-500 hover:scale-110 transition"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-slate-400 hover:ring-2 hover:ring-[#0084D1] transition"
               />
             </Link>
 
             {/* Mobile Menu Button */}
-            <FaBarsStaggered
+            <HiOutlineMenuAlt3
+              onClick={() => setOpen(!open)}
               className="text-2xl cursor-pointer lg:hidden"
-              onClick={() => setToggleBars(!toggleBars)}
             />
           </div>
         </div>
 
-        {/* ===== Mobile Dropdown ===== */}
+        {/* Mobile Menu */}
         <div
-          className={`lg:hidden mt-3 rounded-xl overflow-hidden transition-all duration-300 
-          ${toggleBars ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
-          ${navBg}`}
+          className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out
+          ${open ? "max-h-96 opacity-100 translate-y-0" : "max-h-0 opacity-0 -translate-y-2"}
+          ${navStyle}`}
         >
-          <ul className="flex flex-col space-y-3 p-4 text-lg">
-            <NavLink
-              to="/pharmacy"
-              end
-              onClick={() => setToggleBars(false)}
-              className={({ isActive }) =>
-                isActive ? activeLink : normalLink
-              }
-            >
-              Home
-            </NavLink>
-
-            <NavLink
-              to="/pharmacy/inventory-management"
-              onClick={() => setToggleBars(false)}
-              className={({ isActive }) =>
-                isActive ? activeLink : normalLink
-              }
-            >
-              Inventory Management
-            </NavLink>
-
-            <NavLink
-              to="/pharmacy/orders"
-              onClick={() => setToggleBars(false)}
-              className={({ isActive }) =>
-                isActive ? activeLink : normalLink
-              }
-            >
-              Orders
-            </NavLink>
-
-            <NavLink
-              to="/pharmacy/contact-us"
-              onClick={() => setToggleBars(false)}
-              className={({ isActive }) =>
-                isActive ? activeLink : normalLink
-              }
-            >
-              Contact Us
-            </NavLink>
-          </ul>
+          <nav className="flex flex-col gap-4 px-6 py-4 text-sm font-medium">
+            <NavLink to="/pharmacy" end onClick={closeMenu}>Home</NavLink>
+            <NavLink to="/pharmacy/inventory-management" onClick={closeMenu}>Inventory</NavLink>
+            <NavLink to="/pharmacy/orders" onClick={closeMenu}>Orders</NavLink>
+            <NavLink to="/pharmacy/contact-us" onClick={closeMenu}>Contact</NavLink>
+          </nav>
         </div>
+      </header>
 
-      </div>
-    </nav>
+      {/* Spacer to prevent content overlap */}
+      <div className="h-16"></div>
+    </>
   );
 }
