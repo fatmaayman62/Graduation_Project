@@ -41,7 +41,7 @@ export default function Login() {
       setLoginError("");
       localStorage.setItem(
         "userDataReg",
-        JSON.stringify({ ...savedData, login: true })
+        JSON.stringify({ ...savedData, login: true,reg:localStorage.getItem("userConfigeration") })
       );
       reset();
       navigate(localStorage.getItem("userConfigeration"));
