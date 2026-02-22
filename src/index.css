@@ -1,0 +1,24 @@
+@import "tailwindcss"; 
+@plugin '../src/Components/Pages/hero.js'; 
+/* Note: You may need to change the path to fit your project structure */
+@source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
+.active{
+   
+  color: #0084D1;
+ 
+    button{
+        color: #6f8198;
+        background-color: #94949433;
+    }
+} 
+ @theme{
+  --color-main_border:#E5E5E5;  
+ }
+ 
+ 
+ 
+@utility container {
+  @apply px-7 md:max-xl:px-0 m-auto;
+}
